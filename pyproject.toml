@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "moneyline"
+version = "0.1.0"
+description = "Parse currency amounts from text with precise, human-readable error messages"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "robert-l359"}]
+
+[project.scripts]
+moneyline = "moneyline.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
