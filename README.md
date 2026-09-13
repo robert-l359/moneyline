@@ -88,9 +88,11 @@ $ python -m moneyline.cli parse "$1,234.56"
 
 ## What it currently understands
 
-- Leading currency symbols: `$`, `€`, `£`, `¥`
+- Currency symbols, either leading or trailing: `$42.00`, `42.00$`, `1.234,56 €`
 - Trailing ISO codes: `25.00 USD`
-- A leading `-` or a trailing accounting-style `(...)` for negatives
+- A leading `-` or a trailing accounting-style `(...)` for negatives,
+  with the symbol allowed on either side of the parentheses: `($42.00)`,
+  `(42.00$)`, `(42.00) $`
 - Thousands separators, validated for correct grouping: `1,234,567.89`
 - Locale-style separators: `1.234,56` parses the same as `1,234.56`
 
@@ -102,9 +104,8 @@ amounts like `19.99` are unaffected), and a `,` is read as grouping only
 when it looks like one — exactly three digits after it, e.g. `1,234` —
 otherwise it's a decimal point too, e.g. `42,50`.
 
-Not yet supported (planned): symbols placed after the number, and
-currency-aware rounding (e.g. JPY has no minor unit). See the issue
-tracker for the current shape of that work.
+Not yet supported (planned): currency-aware rounding (e.g. JPY has no
+minor unit). See the issue tracker for the current shape of that work.
 
 ## Installing
 

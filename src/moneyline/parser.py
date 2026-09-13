@@ -63,6 +63,18 @@ class _Scanner:
         return ParseError(reason, self.text, self.line, column)
 
 
+def _try_trailing_symbol(scanner: _Scanner) -> str | None:
+    """Consume a currency symbol at the scanner's current position, for
+    layouts like "42.00$" or "1.234,56 €" where the symbol follows the
+    number instead of leading it.
+    """
+    if scanner.peek() in SYMBOL_CURRENCY:
+        currency = SYMBOL_CURRENCY[scanner.advance()]
+        scanner.skip_spaces()
+        return currency
+    return None
+
+
 def _validate_thousands_groups(
     scanner: _Scanner, groups: list[str], positions: list[int]
 ) -> None:
@@ -194,11 +206,17 @@ def parse_amount(text: str, *, line: int = 1) -> Money:
 
     scanner.skip_spaces()
 
+    if currency is None:
+        currency = _try_trailing_symbol(scanner)
+
     if negative_parens:
         if scanner.peek() != ")":
             raise scanner.fail("expected closing ')'")
         scanner.advance()
         scanner.skip_spaces()
+
+    if currency is None:
+        currency = _try_trailing_symbol(scanner)
 
     if currency is None and scanner.peek().isalpha():
         code_start = scanner.pos
