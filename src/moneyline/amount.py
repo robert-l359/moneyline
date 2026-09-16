@@ -1,7 +1,9 @@
 """The core value type: an exact amount paired with an optional currency."""
 
 from dataclasses import dataclass
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_UP
+
+from .currencies import minor_units
 
 
 @dataclass(frozen=True)
@@ -37,6 +39,15 @@ class Money:
             )
         return self.currency or other.currency
 
+    def rounded(self) -> "Money":
+        """Round to this amount's currency's minor-unit precision, e.g.
+        to whole yen for JPY. Amounts with no attached currency round
+        to 2 places, the general-purpose default.
+        """
+        digits = minor_units(self.currency)
+        quantum = Decimal(1).scaleb(-digits)
+        return Money(self.amount.quantize(quantum, rounding=ROUND_HALF_UP), self.currency)
+
     def __str__(self) -> str:
-        text = f"{self.amount:,.2f}"
+        text = f"{self.amount:,.{minor_units(self.currency)}f}"
         return f"{text} {self.currency}" if self.currency else text
