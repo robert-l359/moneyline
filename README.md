@@ -119,9 +119,8 @@ amounts like `19.99` are unaffected), and a `,` is read as grouping only
 when it looks like one — exactly three digits after it, e.g. `1,234` —
 otherwise it's a decimal point too, e.g. `42,50`.
 
-Not yet supported (planned): a test suite covering parser edge cases
-and error columns. See the issue tracker for the current shape of that
-work.
+Not yet supported (planned): multi-currency totals in `sum` that group
+by currency instead of erroring, and a JSON output mode for the CLI.
 
 ## Installing
 
@@ -134,3 +133,11 @@ pip install -e .
 That gets you the `moneyline` command from the `[project.scripts]`
 entry point; the library itself works with just the `src/` layout on
 your `PYTHONPATH` if you'd rather not install it.
+
+## Running the tests
+
+The test suite is plain `unittest`, no test runner to install:
+
+```
+python -m unittest discover
+```
