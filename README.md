@@ -93,6 +93,22 @@ $ moneyline sum amounts.txt
 35.50
 ```
 
+A file can mix currencies; `sum` prints one running total per currency
+instead of erroring on the first line that doesn't match the rest:
+
+```
+$ cat mixed.txt
+$10.00
+10 EUR
+$5.00
+$ moneyline sum mixed.txt
+10.00 EUR
+15.00 USD
+```
+
+Amounts with no currency attached form their own group, printed without
+a currency suffix, same as `parse` prints a bare amount.
+
 Without installing anything, the same commands work as:
 
 ```
@@ -119,8 +135,7 @@ amounts like `19.99` are unaffected), and a `,` is read as grouping only
 when it looks like one — exactly three digits after it, e.g. `1,234` —
 otherwise it's a decimal point too, e.g. `42,50`.
 
-Not yet supported (planned): multi-currency totals in `sum` that group
-by currency instead of erroring, and a JSON output mode for the CLI.
+Not yet supported (planned): a JSON output mode for the CLI.
 
 ## Installing
 

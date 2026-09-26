@@ -52,6 +52,22 @@ class SumCommandTests(unittest.TestCase):
         self.assertIn("line 2", err.getvalue())
         self.assertEqual(out.getvalue(), "")
 
+    def test_sums_each_currency_separately(self):
+        path = self._write(["$10.00", "10 EUR", "$5.00", "5 EUR"])
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = main(["sum", path])
+        self.assertEqual(code, 0)
+        self.assertEqual(out.getvalue().splitlines(), ["15.00 EUR", "15.00 USD"])
+
+    def test_bare_amounts_form_their_own_group(self):
+        path = self._write(["10.00", "$5.00", "2.50"])
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = main(["sum", path])
+        self.assertEqual(code, 0)
+        self.assertEqual(out.getvalue().splitlines(), ["12.50", "5.00 USD"])
+
 
 if __name__ == "__main__":
     unittest.main()
